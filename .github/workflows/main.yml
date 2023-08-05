@@ -1,25 +1,32 @@
-name: Run Main Every Saturday
+name: Run main.py every Saturday
 
 on:
   schedule:
-    - cron: "0 14 * * 6" # Runs at 15:45 UTC (3:45 PM in your local time) on Saturdays
+    - cron: '10 14 * * 6'
 
 jobs:
   run-main:
-    name: Run Main.py
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.x" # Replace 'x' with the desired version (e.g., 3.8, 3.9)
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'  # Replace 'x' with your desired Python version
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-        # Replace 'requirements.txt' with the file containing your project's dependencies
+    - name: Install dependencies
+      run: pip install -r requirements.txt  # If you have any dependencies, create a requirements.txt file and list them here
 
-      - name: Run Main.py
-        run: python main.py
+    - name: Run main.py
+      run: python main.py
+
+    - name: Commit changes
+      run: |
+        git config --global user.name "Your GitHub Username"
+        git config --global user.email "your.email@example.com"
+        git add .  # This will stage all the changes, including the JSON file created by main.py
+        git commit -m "Add generated JSON file"
+        git push origin HEAD
