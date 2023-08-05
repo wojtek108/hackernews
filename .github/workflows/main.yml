@@ -2,31 +2,40 @@ name: Run main.py every Saturday
 
 on:
   schedule:
-    - cron: '19 14 * * 6'
+    - cron: '24 14 * * 6'
 
 jobs:
-  run-main:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9'  # Replace 'x' with your desired Python version
+      - name: checkout repo content
+        uses: actions/checkout@v2 # checkout the repository content to github runner
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt  # If you have any dependencies, create a requirements.txt file and list them here
-
-    - name: Run main.py
-      run: python main.py
-
-    - name: Commit changes
-      run: |
-        git config --global user.name "GitHub Action"
-        git config --global user.email "action@github.com"
-        git add .  # This will stage all the changes, including the JSON file created by main.py
-        git commit -m "Add generated JSON file"
-        git push origin HEAD
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9' # install the python version needed
+          
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: execute py script # run main.py
+        env:
+          SOME_SECRET: ${{ secrets.SOME_SECRET }}
+        run: python app.py
+          
+      - name: commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git diff-index --quiet HEAD || (git commit -a -m "updated logs" --allow-empty)
+          
+      - name: push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main 
