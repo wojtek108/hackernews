@@ -2,7 +2,7 @@ name: Run Main Every Saturday
 
 on:
   schedule:
-    - cron: "00 14 * * 6" # Runs at 15:45 UTC (3:45 PM in your local time) on Saturdays
+    - cron: "0 14 * * 6" # Runs at 15:45 UTC (3:45 PM in your local time) on Saturdays
 
 jobs:
   run-main:
