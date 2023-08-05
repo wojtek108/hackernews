@@ -1,0 +1,25 @@
+name: Run Main Every Saturday
+
+on:
+  schedule:
+    - cron: "45 15 * * 6" # Runs at 15:45 UTC (3:45 PM in your local time) on Saturdays
+
+jobs:
+  run-main:
+    name: Run Main.py
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x" # Replace 'x' with the desired version (e.g., 3.8, 3.9)
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+        # Replace 'requirements.txt' with the file containing your project's dependencies
+
+      - name: Run Main.py
+        run: python main.py
