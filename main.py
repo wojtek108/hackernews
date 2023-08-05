@@ -8,7 +8,7 @@ url = 'https://us1.campaign-archive.com/home/?u=faa8eb4ef3a111cef92c4f3d4&id=e50
 
 response = requests.get(url)
 
-print(response)
+# print(response)
 
 html = response.text
 
@@ -18,12 +18,12 @@ soup = BeautifulSoup(response.content, 'html.parser')
 for link in soup.find_all('a'):
     try:
         if '#' in link.string:
-            print("Link:", "Text:", link.string)
+             # print("Link:", "Text:", link.string)
             links.add(link.get('href'))
     except TypeError:
         pass
 
-print(links)
+# print(links)
 
 database = dict()
 
@@ -51,4 +51,4 @@ for link in links:
     # break
     with open("database.json", "w", encoding="UTF-8") as outfile:
         json.dump(database, outfile)
-pprint(database)
+# pprint(database)
