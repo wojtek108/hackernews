@@ -2,7 +2,7 @@ name: Run main.py every Saturday
 
 on:
   schedule:
-    - cron: '10 14 * * 6'
+    - cron: '19 14 * * 6'
 
 jobs:
   run-main:
@@ -25,8 +25,8 @@ jobs:
 
     - name: Commit changes
       run: |
-        git config --global user.name "Your GitHub Username"
-        git config --global user.email "your.email@example.com"
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
         git add .  # This will stage all the changes, including the JSON file created by main.py
         git commit -m "Add generated JSON file"
         git push origin HEAD
