@@ -1,8 +1,7 @@
 name: Run main.py every Saturday
 
 on:
-  schedule:
-    - cron: '24 14 * * 6'
+  workflow_dispatch
 
 jobs:
   build:
