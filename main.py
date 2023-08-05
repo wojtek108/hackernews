@@ -2,7 +2,7 @@ import json
 
 import requests
 from bs4 import BeautifulSoup
-from pprint import pprint
+
 
 url = 'https://us1.campaign-archive.com/home/?u=faa8eb4ef3a111cef92c4f3d4&id=e505c88a2e'
 
