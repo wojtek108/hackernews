@@ -1,3 +1,5 @@
+import json
+
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
@@ -10,7 +12,7 @@ print(response)
 
 html = response.text
 
-links =set()
+links = set()
 
 soup = BeautifulSoup(response.content, 'html.parser')
 for link in soup.find_all('a'):
@@ -28,6 +30,10 @@ database = dict()
 for link in links:
     response = requests.get(link)
     soup = BeautifulSoup(response.content, 'html.parser')
+    issue = soup.find(id='issue')
+    date_of_issue = issue.contents[2].strip()
+    # print(date_of_issue)
+    # break
     for link2 in soup.find_all('a'):
         try:
             if 'Votes' in link2.get('title'):
@@ -35,11 +41,14 @@ for link in links:
                 element_link = link2.get('href')
                 element_name = link2.string
 
-                if database.get(category) == None:
+                if database.get(category) is None:
                     database[category] = []
-                    database[category].append([element_name, element_link])
+                    database[category].append([element_name, element_link, date_of_issue])
                 else:
-                    database[category].append([element_name, element_link])
+                    database[category].append([element_name, element_link, date_of_issue])
         except:
             pass
+    # break
+    with open("database.json", "w", encoding="UTF-8") as outfile:
+        json.dump(database, outfile)
 pprint(database)

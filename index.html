@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACKERNEWS NEWSTLETTER VIEWER</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+        .category-details {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        .category-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .category-list-item {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hackernews newstletter viewer</h1>
+    <label for="category">Select a category:</label>
+    <select id="category">
+        <option value="" selected disabled>Select a category</option>
+        <!-- Add category options here -->
+    </select>
+
+    <div class="category-details">
+        <h2 class="category-title">Category Details</h2>
+        <ul id="category-list"></ul>
+    </div>
+
+    <script>
+        // Replace 'your-json-file.json' with the path to your JSON file
+        const jsonFileURL = 'database.json';
+
+        // Function to load JSON file asynchronously
+        async function loadJSON(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching JSON:', error);
+            }
+        }
+
+        // Function to display category details
+        function displayCategoryDetails(categoryData) {
+            const categoryListElement = document.getElementById('category-list');
+            categoryListElement.innerHTML = ''; // Clear previous data
+
+            categoryData.forEach(item => {
+                const li = document.createElement('li');
+                const title = item[0];
+                const link = item[1];
+                const date = item[2];
+                const anchor = document.createElement('a');
+                anchor.href = link;
+                anchor.textContent = title;
+                li.textContent = `Date: ${date} - `;
+                li.classList.add('category-list-item');
+                li.appendChild(anchor);
+                categoryListElement.appendChild(li);
+            });
+        }
+
+        // Load JSON data from the file and populate the dropdown
+        loadJSON(jsonFileURL).then(jsonData => {
+            const categoryDropdown = document.getElementById('category');
+            for (const category in jsonData) {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryDropdown.appendChild(option);
+            }
+
+            // Event listener for dropdown change
+            categoryDropdown.addEventListener('change', (event) => {
+                const selectedCategory = event.target.value;
+                if (selectedCategory) {
+                    displayCategoryDetails(jsonData[selectedCategory]);
+                } else {
+                    // Clear category details if no category is selected
+                    document.getElementById('category-list').innerHTML = '';
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
