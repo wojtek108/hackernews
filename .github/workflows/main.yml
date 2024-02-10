@@ -3,6 +3,8 @@ name: Run main.py every Saturday
 on: 
   schedule:
     - cron: '0 19 * * 5'
+  workflow_dispatch:  # Enables manual triggering
+
 
 jobs:
   run-main:
