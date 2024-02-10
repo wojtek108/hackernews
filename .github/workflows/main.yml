@@ -1,36 +1,35 @@
 name: Run main.py every Saturday
 
-on: 
+on:
   schedule:
-    - cron: '0 19 * * 5'
+    - cron: '0 19 * * 5'  # Run at 7:00 PM PST every Saturday
   workflow_dispatch:  # Enables manual triggering
 
 
 jobs:
   run-main:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9'   # Replace 'x' with your desired Python version
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9  # Replace with your desired version
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt  # If you have any dependencies, create a requirements.txt file and list them here
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    - name: Run main.py
-      run: python main.py
-  
-    - name: Commit changes
-      run: |
-        git config --global user.name "GitHub Action"
-        git config --global user.email "action@github.com"
-        git add .  # This will stage all the changes, including the JSON file created by main.py
-        git commit -m "Add generated JSON file"
-        git push origin HEAD
+      - name: Run main.py
+        run: python main.py
+
+      - name: Commit changes (if JSON file is generated)
+        run: |
+          if [[ -f generated_json_file.json ]]; then
+            git config --global user.name "GitHub Action"
+            git config --global user.email "action@github.com"
+            git add generated_json_file.json
+            git commit -m "Add generated JSON file"
+            git push origin HEAD
+          fi
+
